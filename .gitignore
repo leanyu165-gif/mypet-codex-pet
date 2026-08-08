@@ -1,0 +1,12 @@
+# 依赖
+node_modules/
+
+# 临时 / 内部文件（不上传）
+codex_strings.txt
+hatch-pet-SKILL.md
+extract_strings.mjs
+check.mjs
+edgecheck.mjs
+inspect.mjs
+thumb.mjs
+verify.mjs

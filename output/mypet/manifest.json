@@ -1,0 +1,27 @@
+{
+  "petId": "mypet",
+  "displayName": "测试桌宠",
+  "format": "WEBP",
+  "size": {
+    "width": 192,
+    "height": 208
+  },
+  "grid": {
+    "cols": 8,
+    "rows": 11
+  },
+  "transparentBackground": true,
+  "states": [
+    { "state": "idle",          "label": "待机",   "row": 0 },
+    { "state": "running-right", "label": "向右移动", "row": 1 },
+    { "state": "running-left",  "label": "向左移动", "row": 2 },
+    { "state": "waving",        "label": "互动",   "row": 3 },
+    { "state": "jumping",       "label": "任务完成", "row": 4 },
+    { "state": "failed",        "label": "任务失败", "row": 5 },
+    { "state": "waiting",       "label": "等待确认", "row": 6 },
+    { "state": "running",       "label": "工作中", "row": 7 },
+    { "state": "review",        "label": "检查中", "row": 8 },
+    { "state": "look-a",        "label": "视线A(待机占位)", "row": 9 },
+    { "state": "look-b",        "label": "视线B(待机占位)", "row": 10 }
+  ]
+}
