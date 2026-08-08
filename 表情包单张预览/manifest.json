@@ -1,0 +1,15 @@
+{
+  "id": "mypet",
+  "displayName": "予愿安洁莉娜q版桌宠",
+  "previews": [
+    { "file": "01-待机-idle.png", "state": "idle", "label": "待机" },
+    { "file": "02-向右移动-running-right.png", "state": "running-right", "label": "向右移动" },
+    { "file": "03-向左移动-running-left.png", "state": "running-left", "label": "向左移动" },
+    { "file": "04-互动-waving.png", "state": "waving", "label": "互动" },
+    { "file": "05-任务完成-jumping.png", "state": "jumping", "label": "任务完成" },
+    { "file": "06-任务失败-failed.png", "state": "failed", "label": "任务失败" },
+    { "file": "07-等待确认-waiting.png", "state": "waiting", "label": "等待确认" },
+    { "file": "08-工作中-running.png", "state": "running", "label": "工作中" },
+    { "file": "09-检查中-review.png", "state": "review", "label": "检查中" }
+  ]
+}

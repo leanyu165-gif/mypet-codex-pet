@@ -1,8 +1,66 @@
 # 予愿安洁莉娜q版桌宠 — Codex 桌面桌宠
 
-《明日方舟》角色「予愿安洁莉娜」Q 版形象的 Codex 桌面桌宠：一只会拍照、跑腿送文件的小助手，基于 Codex 桌宠 V2 规范（8 列 × 11 行，整图 1536×2288）。本项目所有资源素材均取自明日方舟官方公开素材。
+《明日方舟》角色「予愿安洁莉娜」Q 版形象的 Codex 桌面桌宠：一只可爱能陪伴你的洁哥，基于 Codex 桌宠 V2 规范（8 列 × 11 行，整图 1536×2288）。本项目所有资源素材均取自明日方舟官方公开素材。
 
 ![预览](output/mypet/preview.png)
+
+## 动作图鉴
+
+予愿安洁莉娜q版桌宠的每个动作由明日方舟官方公开素材整理，并输出为 `192 × 208` 的透明 PNG 单帧预览。先看动作，再看安装包：
+
+<table>
+  <tr>
+    <td width="33%" align="center">
+      <img src="./表情包单张预览/01-待机-idle.png" width="150" alt="待机动作预览">
+      <br><b>待机</b><br><sub><code>idle</code> · 呼吸与眨眼</sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="./表情包单张预览/02-向右移动-running-right.png" width="150" alt="向右移动动作预览">
+      <br><b>向右移动</b><br><sub><code>running-right</code></sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="./表情包单张预览/03-向左移动-running-left.png" width="150" alt="向左移动动作预览">
+      <br><b>向左移动</b><br><sub><code>running-left</code></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="./表情包单张预览/04-互动-waving.png" width="150" alt="互动动作预览">
+      <br><b>互动</b><br><sub><code>waving</code> · 互动反馈</sub>
+    </td>
+    <td align="center">
+      <img src="./表情包单张预览/05-任务完成-jumping.png" width="150" alt="任务完成动作预览">
+      <br><b>任务完成</b><br><sub><code>jumping</code> · 任务完成庆祝</sub>
+    </td>
+    <td align="center">
+      <img src="./表情包单张预览/06-任务失败-failed.png" width="150" alt="任务失败动作预览">
+      <br><b>任务失败</b><br><sub><code>failed</code></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="./表情包单张预览/07-等待确认-waiting.png" width="150" alt="等待确认动作预览">
+      <br><b>等待确认</b><br><sub><code>waiting</code> · 等待文件确认</sub>
+    </td>
+    <td align="center">
+      <img src="./表情包单张预览/08-工作中-running.png" width="150" alt="工作中动作预览">
+      <br><b>工作中</b><br><sub><code>running</code> · 送信跑腿</sub>
+    </td>
+    <td align="center">
+      <img src="./表情包单张预览/09-检查中-review.png" width="150" alt="检查中动作预览">
+      <br><b>检查中</b><br><sub><code>review</code> · 思考检查</sub>
+    </td>
+  </tr>
+</table>
+
+<details>
+  <summary><b>查看完整动作图集</b></summary>
+  <br>
+  <p align="center">
+    <img src="./output/mypet/spritesheet.webp" width="620" alt="予愿安洁莉娜q版桌宠 1536×2288 的 8×11 Codex v2 精灵图集">
+  </p>
+  <p align="center"><sub>每格为 192 × 208；第 0–8 行是标准动作，第 9–10 行是视线。</sub></p>
+</details>
 
 ## 安装
 
@@ -117,8 +175,9 @@ node build.mjs     # 读取 素材/ 下的 GIF → 生成 output/mypet/spriteshe
 ## 项目结构
 
 ```
-├── build.mjs          # 构建脚本（GIF → 图集）
+├── build.mjs          # 构建脚本（GIF → 图集 + 单帧预览）
 ├── 素材/               # 源 GIF（9 个状态 + 2 个备选）
+├── 表情包单张预览/      # 9 个动作的透明 PNG 单帧预览（build.mjs 自动生成）
 └── output/mypet/
     ├── pet.json       # 桌宠配置（经典 V2 格式）
     ├── spritesheet.webp  # 1536×2288 图集

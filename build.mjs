@@ -4,6 +4,7 @@ import path from 'path';
 
 const SRC_DIR = path.join(import.meta.dirname, '素材');
 const OUT_DIR = path.join(import.meta.dirname, 'output/mypet');
+const PREVIEW_DIR = path.join(import.meta.dirname, '表情包单张预览');
 const CELL_W = 192, CELL_H = 208, COLS = 8;
 const MARGIN = 8; // 内容四周保留的安全边距，避免贴边/接缝
 
@@ -21,6 +22,7 @@ const mapping = [
 ];
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
+fs.mkdirSync(PREVIEW_DIR, { recursive: true });
 
 // 读取一个 GIF 的全部帧为 RGBA raw
 async function readFrames(file) {
@@ -127,6 +129,9 @@ for (let r = 0; r < mapping.length; r++) {
   }
   // frameCount 之后的格子保持透明（基底本来就是透明画布，不写入即可）
   if (r === 0) idleCells = rowCells;
+  // 每个状态输出一张单帧预览，作为 README「动作图鉴」的展示图
+  const previewName = `${String(r + 1).padStart(2, '0')}-${label}-${state}.png`;
+  await fs.promises.writeFile(path.join(PREVIEW_DIR, previewName), rowCells[0]);
   rowsMeta.push({ state, label, row: r, frames: pick.map(p => p + 1) });
   console.log(`✓ ${label}(${state})  规范${frameCount}帧 源${N} → 选帧 [${pick.map(p => p + 1).join(',')}]`);
 }
