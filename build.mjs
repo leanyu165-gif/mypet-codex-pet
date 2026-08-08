@@ -7,16 +7,17 @@ const OUT_DIR = path.join(import.meta.dirname, 'output/mypet');
 const CELL_W = 192, CELL_H = 208, COLS = 8;
 const MARGIN = 8; // 内容四周保留的安全边距，避免贴边/接缝
 
+// frames = 该状态在 V2 规范中的固定帧数（引擎只播每行前 N 帧）
 const mapping = [
-  { file: '待机.gif',                      state: 'idle',          label: '待机' },
-  { file: '向右移动.gif',                   state: 'running-right', label: '向右移动' },
-  { file: '向左移动.gif',                   state: 'running-left',  label: '向左移动' },
-  { file: '互动.gif',                      state: 'waving',        label: '互动' },
-  { file: '任务完成.gif',                   state: 'jumping',       label: '任务完成' },
-  { file: '任务失败.gif',                   state: 'failed',        label: '任务失败' },
-  { file: '等待确认{博士，这里有一份文件需要您确认}.gif', state: 'waiting', label: '等待确认' },
-  { file: '工作中(送信).gif',               state: 'running',       label: '工作中' },
-  { file: '检查中{思考.ing}.gif',           state: 'review',        label: '检查中' },
+  { file: '待机.gif',                      state: 'idle',          label: '待机',     frames: 6 },
+  { file: '向右移动.gif',                   state: 'running-right', label: '向右移动', frames: 8 },
+  { file: '向左移动.gif',                   state: 'running-left',  label: '向左移动', frames: 8 },
+  { file: '互动.gif',                      state: 'waving',        label: '互动',     frames: 4 },
+  { file: '任务完成.gif',                   state: 'jumping',       label: '任务完成', frames: 5 },
+  { file: '任务失败.gif',                   state: 'failed',        label: '任务失败', frames: 8 },
+  { file: '等待确认{博士，这里有一份文件需要您确认}.gif', state: 'waiting', label: '等待确认', frames: 6 },
+  { file: '工作中(送信).gif',               state: 'running',       label: '工作中',   frames: 6 },
+  { file: '检查中{思考.ing}.gif',           state: 'review',        label: '检查中',   frames: 6 },
 ];
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -88,10 +89,10 @@ async function toCell(buf, w, h, ch, box) {
     .toBuffer();
 }
 
-// 选 8 帧：沿循环均匀采样
-function pickFrames(N) {
+// 沿循环均匀采样到 count 帧（count = 该状态的规范帧数，最多 8）
+function pickFrames(N, count) {
   const idx = [];
-  for (let i = 0; i < 8; i++) idx.push(Math.round(i * N / 8) % N);
+  for (let i = 0; i < count; i++) idx.push(Math.round(i * N / count) % N);
   return idx;
 }
 
@@ -100,7 +101,7 @@ const rowsMeta = [];
 let idleCells = null;
 
 for (let r = 0; r < mapping.length; r++) {
-  const { file, state, label } = mapping[r];
+  const { file, state, label, frames: frameCount } = mapping[r];
   const fullPath = path.join(SRC_DIR, file);
   const { frames, w, ph, ch } = await readFrames(fullPath);
   const N = frames.length;
@@ -117,22 +118,26 @@ for (let r = 0; r < mapping.length; r++) {
   }
   if (!union) { console.log(`⚠️ ${file} 全透明，跳过`); continue; }
 
-  const pick = pickFrames(N);
+  const pick = pickFrames(N, frameCount);
   const rowCells = [];
-  for (let c = 0; c < 8; c++) {
+  for (let c = 0; c < frameCount; c++) {
     const cellPng = await toCell(frames[pick[c]], w, ph, ch, union);
     rowCells.push(cellPng);
     composites.push({ input: cellPng, left: c * CELL_W, top: r * CELL_H });
   }
+  // frameCount 之后的格子保持透明（基底本来就是透明画布，不写入即可）
   if (r === 0) idleCells = rowCells;
   rowsMeta.push({ state, label, row: r, frames: pick.map(p => p + 1) });
-  console.log(`✓ ${label}(${state})  源帧${N} → 选帧 [${pick.map(p => p + 1).join(',')}]`);
+  console.log(`✓ ${label}(${state})  规范${frameCount}帧 源${N} → 选帧 [${pick.map(p => p + 1).join(',')}]`);
 }
 
 // 补齐 V2 规范的视线行（第 9、10 行）：先用待机动画占位，
 // 避免 Codex 追踪鼠标时桌宠变成空白。后续可以换成真正的 16 向视线素材。
 for (let r = 9; r < 11; r++) {
-  idleCells.forEach((cellPng, c) => composites.push({ input: cellPng, left: c * CELL_W, top: r * CELL_H }));
+  // 视线行暂无真实素材，循环复用 idle 的前 6 帧填满 8 格（保持原来的非空占位）
+  for (let c = 0; c < 8; c++) {
+    composites.push({ input: idleCells[c % idleCells.length], left: c * CELL_W, top: r * CELL_H });
+  }
   rowsMeta.push({ state: `look-${r === 9 ? 'a' : 'b'}`, label: r === 9 ? '视线A' : '视线B', row: r, frames: 'idle占位' });
   console.log(`✓ ${r === 9 ? '视线A' : '视线B'}(look)  待机动画占位`);
 }
