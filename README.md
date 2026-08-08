@@ -4,20 +4,92 @@
 
 ![预览](output/mypet/preview.png)
 
-## 安装（直接用，不用改）
+## 安装
 
-1. 打开 `%USERPROFILE%\.codex\pets\` 目录（`C:\Users\<你的用户名>\.codex\pets\`）
-2. 把本项目 `output/mypet/` 整个文件夹复制进去，得到 `...\.codex\pets\mypet\`
-3. 重启 Codex 桌面端 → **设置 → Pets → 刷新列表** → 选中「测试桌宠」
+本质只有一步：把 `output/mypet` 里的 **`pet.json` + `spritesheet.webp`** 放进 `%USERPROFILE%\.codex\pets\mypet\`（macOS 是 `~/.codex/pets/mypet/`）。下面三种方式任选其一。
+
+> 注意：最终安装目录必须叫 **`mypet`**，不要直接把仓库根目录或 `output` 外层文件夹当作安装目录。`.codex` 是隐藏目录，但可以直接在资源管理器地址栏输入路径访问。
+
+### 方式一：PowerShell 复制（推荐）
+
+先把仓库 clone 或下载到本地，然后在 PowerShell 里执行（把 `$repoPath` 换成你本地的仓库路径）：
+
+```powershell
+$repoPath = "C:\path\to\mypet-codex-pet"          # 改成你的仓库路径
+$petDir   = Join-Path ([Environment]::GetFolderPath("UserProfile")) ".codex\pets\mypet"
+New-Item -ItemType Directory -Force -Path $petDir | Out-Null
+Copy-Item "$repoPath\output\mypet\pet.json"         $petDir -Force
+Copy-Item "$repoPath\output\mypet\spritesheet.webp" $petDir -Force
+```
+
+检查安装结果：
+
+```powershell
+Get-Item "$petDir\pet.json", "$petDir\spritesheet.webp"
+```
+
+### 方式二：手动拖拽
+
+1. 在资源管理器地址栏输入 `%USERPROFILE%\.codex\pets\mypet\` 回车；目录不存在就先创建
+2. 把仓库 `output/mypet/` 里的 `pet.json` 和 `spritesheet.webp` 拖进这个目录
+3. 最终目录结构应为：
+
+```
+C:\Users\你的用户名\.codex\pets\mypet\
+├── pet.json
+└── spritesheet.webp
+```
+
+`output/mypet` 里的 `manifest.json`、`preview.png` 只是文档和预览图，Codex 不需要，可拷可不拷。
+
+### 方式三：让 Agent 自动安装
+
+如果你用的 Agent 具备网络和本机文件读写权限，把下面这段提示词交给它（先确认已允许它操作本机文件）：
+
+> 请帮我在这台电脑上安装 GitHub 仓库 https://github.com/leanyu165-gif/mypet-codex-pet 的 Codex 原生 v2 桌宠「测试桌宠」。
+>
+> 1. 识别当前系统是 macOS 还是 Windows。
+> 2. 用 `git clone` 或下载源码把仓库拿到本地。
+> 3. 找到 `output/mypet/` 里的 `pet.json` 和 `spritesheet.webp`，不要把仓库根目录或 `output` 外层文件夹当安装目录。
+> 4. 创建桌宠目录：macOS 为 `~/.codex/pets/mypet/`，Windows 为 `%USERPROFILE%\.codex\pets\mypet\`。
+> 5. 只把这两个文件复制进去；不要删除或修改其他桌宠文件。
+> 6. 检查 `pet.json` 里的 `id` 是否为 `mypet`，并确认 `spritesheet.webp` 存在且可读取。
+> 7. 若目标目录已有同名文件，先报告并询问是否覆盖，不要擅自删除其他文件。
+> 8. 完成后告诉我实际安装路径、检查结果，并提醒我重新打开 Codex，到「设置 → Pets」刷新列表后选择「测试桌宠」。
+> 9. 如果 Windows 下刷新后仍看不到，先检查 Codex 是否在使用 WSL 后端（见文末「故障排查」），不要修改 pet.json、不要转 v1、不要重画图集。
+
+## macOS
+
+本仓库跨平台，macOS 用户执行（把 `$repoPath` 换成实际路径）：
+
+```bash
+mkdir -p ~/.codex/pets/mypet
+cp "$repoPath/output/mypet/pet.json"         ~/.codex/pets/mypet/
+cp "$repoPath/output/mypet/spritesheet.webp" ~/.codex/pets/mypet/
+```
 
 ## 从源码重建
+
+想改动画或参与开发时用：
 
 ```bash
 npm install        # 安装 sharp（图像处理库）
 node build.mjs     # 读取 素材/ 下的 GIF → 生成 output/mypet/spritesheet.webp
 ```
 
-重跑后把 `output/mypet/` 按上面「安装」步骤复制即可生效。
+重跑后按上面的任一方式把新 `output/mypet` 覆盖复制即可生效。
+
+## 完成安装
+
+重新打开 Codex（Windows 建议从系统托盘**完整退出**，只关窗口可能没结束后台进程），前往 **设置 → Pets → 刷新列表**，选择「**测试桌宠**」。
+
+## 故障排查：Windows 刷新后看不到宠物
+
+如果 `pet.json` 和 `spritesheet.webp` 都放对了、`id` 也是 `mypet`，刷新后仍看不到，可能是 Codex Desktop 用了 **WSL 后端**——该场景下 Codex 可能无法发现已正确安装的自定义桌宠（上游问题：[openai/codex#20730](https://github.com/openai/codex/issues/20730)）。
+
+临时处理：在 Codex 设置里把任务执行后端切到 Windows 原生模式 → 从系统托盘完整退出 → 重启 → 刷新 Pets 列表。集成终端仍可继续用 WSL。
+
+> 这只影响桌宠能否被 Codex 发现，**不代表资源包格式有问题**。请勿为了绕过它而把资源转成 v1、修改 `pet.json` 或重画 `spritesheet.webp`。
 
 ## 素材与状态映射
 
