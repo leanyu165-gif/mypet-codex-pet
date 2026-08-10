@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' file: data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>桌宠换图编辑器</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>桌宠换图编辑器</h1>
+    <p>给 Codex 桌宠的 9 个状态各选一张图，一键生成并安装</p>
+  </header>
+
+  <main>
+    <section id="slots" aria-label="状态槽位"></section>
+
+    <aside id="panel">
+      <div class="field">
+        <label for="petName">桌宠名字</label>
+        <input id="petName" value="予愿安洁莉娜q版桌宠" />
+      </div>
+      <div class="field">
+        <label for="petDesc">一句话介绍</label>
+        <input id="petDesc" value="一只可爱能陪伴你的洁哥。" />
+      </div>
+      <div class="field">
+        <label for="petId">安装目录名（英文，默认 mypet）</label>
+        <input id="petId" value="mypet" />
+      </div>
+
+      <div class="field">
+        <label>输出到哪里</label>
+        <label class="radio"><input type="radio" name="target" value="install" checked /> 安装到 Codex 桌宠目录</label>
+        <label class="radio"><input type="radio" name="target" value="custom" /> 输出到指定文件夹</label>
+        <div id="customTarget" class="hidden">
+          <button id="pickFolder" type="button">选择文件夹</button>
+          <span id="customPath"></span>
+        </div>
+        <div id="targetPreview">目标：<code id="targetCode">…</code></div>
+      </div>
+
+      <button id="buildBtn" class="primary" type="button">生成并安装</button>
+      <div id="log" class="log" aria-live="polite"></div>
+    </aside>
+  </main>
+
+  <footer>
+    <p>提示：每个动画最多 8 帧；「等待确认 / 工作中 / 检查中」持续状态只会播一次后回到待机，这是 Codex 引擎的固定行为。GIF 会自动对齐裁剪，无需手动抠图。</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #14101f;
+  --panel: #1d1730;
+  --card: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.13);
+  --pink: #ff9ecb;
+  --pink-soft: #ffc4de;
+  --text: #f2eef8;
+  --muted: #b3acc6;
+  --ok: #7dd9a0;
+  --err: #ff8fa3;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+header {
+  padding: 18px 26px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+header p {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  gap: 22px;
+  padding: 22px 26px;
+  overflow: hidden;
+}
+
+#slots {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  overflow-y: auto;
+  align-content: start;
+  padding-right: 4px;
+}
+
+.slot {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slot-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.slot-label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.slot-code {
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.slot-preview {
+  width: 100%;
+  aspect-ratio: 192 / 208;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slot-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.slot-preview .placeholder {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+button.pick {
+  background: rgba(255, 158, 203, 0.14);
+  border: 1px solid rgba(255, 158, 203, 0.35);
+  color: var(--pink-soft);
+  border-radius: 9px;
+  padding: 8px 0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+button.pick:hover {
+  background: rgba(255, 158, 203, 0.24);
+}
+
+.slot-file {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 15px;
+}
+
+#panel {
+  width: 330px;
+  flex-shrink: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.field input[type='text'],
+.field input:not([type]) {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 9px 11px;
+  font-size: 14px;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--pink);
+}
+
+label.radio {
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+#customTarget {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#customTarget.hidden {
+  display: none;
+}
+
+#customTarget button {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#customPath {
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-all;
+  flex: 1;
+}
+
+#targetPreview {
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+#targetPreview code {
+  color: var(--pink-soft);
+}
+
+button.primary {
+  background: linear-gradient(135deg, #ff9ecb, #e878a8);
+  border: none;
+  border-radius: 12px;
+  color: #1c1020;
+  font-size: 17px;
+  font-weight: 800;
+  padding: 13px 0;
+  cursor: pointer;
+  transition: filter 0.15s, opacity 0.15s;
+}
+
+button.primary:hover {
+  filter: brightness(1.08);
+}
+
+button.primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.log {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  min-height: 120px;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+footer {
+  padding: 10px 26px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}

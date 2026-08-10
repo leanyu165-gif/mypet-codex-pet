@@ -1,0 +1,30 @@
+appId: com.yu.codex-pet-editor
+productName: CodexPetEditor
+directories:
+  output: dist
+files:
+  - main.js
+  - preload.js
+  - renderer/**
+  - lib/**
+  - package.json
+asar: true
+# sharp 是 N-API 预编译原生库，无需重编译；但 .node/.dll 不能从 asar 里加载，必须解包
+npmRebuild: false
+asarUnpack:
+  - node_modules/@img/**
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch:
+        - x64
+# 国内网络：electron 安装包走 npmmirror（winCodeSign/nsis 走 ELECTRON_BUILDER_BINARIES_MIRROR 环境变量）
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  shortcutName: 桌宠换图编辑器
+  artifactName: ${productName}-Setup-${version}.${ext}
