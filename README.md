@@ -62,7 +62,7 @@
 
 ## 桌宠换图编辑器
 
-配套的可视化换图小工具：为 9 个状态分别选图（GIF / PNG / WebP / JPG），一键拼合生成 `spritesheet.webp` + `pet.json` 并写入 Codex，无需命令行。源码在 [`editor/`](./editor)，运行 `cd editor && npm install && npm start`，打包 Windows 安装包用 `npm run dist`。
+配套的可视化换图小工具：为 9 个状态分别选图（GIF / PNG / WebP / JPG），一键拼合生成 `spritesheet.webp` + `pet.json` 并写入 Codex，无需命令行。源码在 [`桌宠换图编辑器/`](./桌宠换图编辑器)，运行 `cd 桌宠换图编辑器 && npm install && npm start`，打包 Windows 安装包用 `npm run dist`。
 
 <p align="center">
   <img src="./assets/readme/editor-screenshot.png" width="700" alt="桌宠换图编辑器界面">
@@ -71,6 +71,8 @@
 ## 安装
 
 本质只有一步：把 `output/mypet` 里的 **`pet.json` + `spritesheet.webp`** 放进 `%USERPROFILE%\.codex\pets\mypet\`（macOS 是 `~/.codex/pets/mypet/`）。下面三种方式任选其一。
+
+> **不想碰命令行？** 直接用上面的「**桌宠换图编辑器**」：可视化选图，一键拼合并自动写入 `~/.codex/pets/<桌宠id>/`（id 默认 `mypet`），免去手动复制。
 
 > 注意：最终安装目录必须叫 **`mypet`**，不要直接把仓库根目录或 `output` 外层文件夹当作安装目录。`.codex` 是隐藏目录，但可以直接在资源管理器地址栏输入路径访问。
 
@@ -183,8 +185,10 @@ node build.mjs     # 读取 素材/ 下的 GIF → 生成 spritesheet.webp、单
 ```
 ├── build.mjs          # 构建脚本（GIF → 图集 + 单帧预览 + 图鉴 GIF）
 ├── 素材/               # 源 GIF（9 个状态 + 2 个备选）
+├── 桌宠换图编辑器/      # 可视化换图工具（Electron GUI，npm install && npm start）
 ├── assets/readme/animations/  # 动作图鉴用的高清源 GIF（512 宽，build.mjs 自动生成）
 ├── 表情包单张预览/      # 9 个动作的透明 PNG 单帧预览（build.mjs 自动生成）
+├── video/             # 宣传片工程（Remotion）
 └── output/mypet/
     ├── pet.json       # 桌宠配置（经典 V2 格式）
     ├── spritesheet.webp  # 1536×2288 图集

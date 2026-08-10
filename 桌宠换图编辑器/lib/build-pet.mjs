@@ -66,12 +66,12 @@ export async function buildFromConfig(config, onStatus = () => {}) {
   };
 }
 
-// CLI 入口：node editor/lib/build-pet.mjs <config.json>
+// CLI 入口：node 桌宠换图编辑器/lib/build-pet.mjs <config.json>
 const isCli = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 if (isCli) {
   const configPath = process.argv[2];
   if (!configPath) {
-    console.error('用法：node editor/lib/build-pet.mjs <config.json>');
+    console.error('用法：node 桌宠换图编辑器/lib/build-pet.mjs <config.json>');
     process.exit(1);
   }
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));

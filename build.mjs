@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
-import { CELL_W, COLS, SPEC, buildStateCells, composeSheet } from './editor/lib/pet-core.mjs';
+import { CELL_W, COLS, SPEC, buildStateCells, composeSheet } from './桌宠换图编辑器/lib/pet-core.mjs';
 
 const SRC_DIR = path.join(import.meta.dirname, '素材');
 const OUT_DIR = path.join(import.meta.dirname, 'output/mypet');
