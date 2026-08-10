@@ -6,7 +6,8 @@ const SRC_DIR = path.join(import.meta.dirname, '素材');
 const OUT_DIR = path.join(import.meta.dirname, 'output/mypet');
 const PREVIEW_DIR = path.join(import.meta.dirname, '表情包单张预览');
 const CELL_W = 192, CELL_H = 208, COLS = 8;
-const MARGIN = 8; // 内容四周保留的安全边距，避免贴边/接缝
+const MARGIN = 2; // 内容四周保留的安全边距，避免贴边/接缝
+const README_GIF_DIR = path.join(import.meta.dirname, 'assets/readme/animations'); // 动作图鉴用的高清源 GIF
 
 // frames = 该状态在 V2 规范中的固定帧数（引擎只播每行前 N 帧）
 const mapping = [
@@ -23,6 +24,7 @@ const mapping = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.mkdirSync(PREVIEW_DIR, { recursive: true });
+fs.mkdirSync(README_GIF_DIR, { recursive: true });
 
 // 读取一个 GIF 的全部帧为 RGBA raw
 async function readFrames(file) {
@@ -79,6 +81,7 @@ async function toCell(buf, w, h, ch, box) {
   const nh = Math.max(1, Math.round(chh * scale));
   const resized = await sharp(cropped, { raw: { width: cw, height: chh, channels: ch } })
     .resize(nw, nh, { fit: 'fill' })
+    .sharpen({ sigma: 1.2 }) // 缩小后锐化，补偿下采样损失的清晰度
     .raw()
     .toBuffer();
   const padL = Math.floor((CELL_W - nw) / 2);
@@ -89,6 +92,15 @@ async function toCell(buf, w, h, ch, box) {
     .extend({ top: padT, bottom: padB, left: padL, right: padR, background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer();
+}
+
+// 动作图鉴用：把源 GIF 等比缩到 512 宽，输出动画 GIF，保留原始清晰度
+async function toReadmeGif(file, outPath) {
+  const meta = await sharp(file, { animated: true }).metadata();
+  const W = 512;
+  const w = Math.min(meta.width, W);
+  const h = Math.round((meta.pageHeight ?? meta.height) * (w / meta.width));
+  await sharp(file, { animated: true }).resize(w, h).gif().toFile(outPath);
 }
 
 // 沿循环均匀采样到 count 帧（count = 该状态的规范帧数，最多 8）
@@ -129,9 +141,12 @@ for (let r = 0; r < mapping.length; r++) {
   }
   // frameCount 之后的格子保持透明（基底本来就是透明画布，不写入即可）
   if (r === 0) idleCells = rowCells;
-  // 每个状态输出一张单帧预览，作为 README「动作图鉴」的展示图
+  // 每个状态输出一张单帧预览，作为表情包素材
   const previewName = `${String(r + 1).padStart(2, '0')}-${label}-${state}.png`;
   await fs.promises.writeFile(path.join(PREVIEW_DIR, previewName), rowCells[0]);
+  // 动作图鉴用的高清源 GIF（干净文件名，避免 README 里的括号/花括号破坏 markdown 图片链接）
+  const gifName = `${String(r + 1).padStart(2, '0')}-${label}-${state}.gif`;
+  await toReadmeGif(fullPath, path.join(README_GIF_DIR, gifName));
   rowsMeta.push({ state, label, row: r, frames: pick.map(p => p + 1) });
   console.log(`✓ ${label}(${state})  规范${frameCount}帧 源${N} → 选帧 [${pick.map(p => p + 1).join(',')}]`);
 }
