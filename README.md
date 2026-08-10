@@ -64,6 +64,10 @@
 
 配套的可视化换图小工具：为 9 个状态分别选图（GIF / PNG / WebP / JPG），一键拼合生成 `spritesheet.webp` + `pet.json` 并写入 Codex，无需命令行。源码在 [`editor/`](./editor)，运行 `cd editor && npm install && npm start`，打包 Windows 安装包用 `npm run dist`。
 
+<p align="center">
+  <img src="./assets/readme/editor-screenshot.png" width="700" alt="桌宠换图编辑器界面">
+</p>
+
 ## 安装
 
 本质只有一步：把 `output/mypet` 里的 **`pet.json` + `spritesheet.webp`** 放进 `%USERPROFILE%\.codex\pets\mypet\`（macOS 是 `~/.codex/pets/mypet/`）。下面三种方式任选其一。
