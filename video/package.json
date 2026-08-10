@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "remotion studio",
-    "render": "remotion render Intro out/intro.mp4"
+    "render": "remotion render Intro out/intro.mp4",
+    "render:editor": "remotion render EditorPromo out/editor-promo.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.507",
