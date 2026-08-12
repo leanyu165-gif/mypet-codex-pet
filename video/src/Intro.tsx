@@ -21,7 +21,7 @@ const useSceneFade = (duration: number, edge = 16) => {
 const clamp = { extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as const };
 
 // ---------- 背景：深蓝紫渐变 + 柔和粉色光晕 ----------
-const Background: React.FC = () => {
+export const Background: React.FC = () => {
   const frame = useCurrentFrame();
   const drift = Math.sin(frame / 130) * 50;
   const drift2 = Math.cos(frame / 170) * 60;
@@ -56,7 +56,7 @@ const IdleFrames: React.FC<{ width?: number; bob?: number }> = ({ width = 620, b
 };
 
 // ---------- 场景 1：开场标题（左上） ----------
-const Scene1Opening: React.FC = () => {
+export const Scene1Opening: React.FC = () => {
   const frame = useCurrentFrame();
   const fade = useSceneFade(240);
   const titleIn = interpolate(frame, [20, 50], [0, 1], clamp);
@@ -97,7 +97,7 @@ const states = [
   { file: 'grid/09-检查中-review.gif', name: '检查中', code: 'review' },
 ];
 
-const Scene2Gallery: React.FC = () => {
+export const Scene2Gallery: React.FC = () => {
   const frame = useCurrentFrame();
   const fade = useSceneFade(420);
   const headIn = interpolate(frame, [0, 20], [0, 1], clamp);
@@ -124,7 +124,7 @@ const Scene2Gallery: React.FC = () => {
 };
 
 // ---------- 场景 5：结尾 ----------
-const Scene5Ending: React.FC = () => {
+export const Scene5Ending: React.FC = () => {
   const frame = useCurrentFrame();
   const fade = useSceneFade(240, 22);
   const mainIn = interpolate(frame, [20, 48], [0, 1], clamp);

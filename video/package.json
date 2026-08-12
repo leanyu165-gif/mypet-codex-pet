@@ -5,7 +5,8 @@
   "scripts": {
     "start": "remotion studio",
     "render": "remotion render Intro out/intro.mp4",
-    "render:editor": "remotion render EditorPromo out/editor-promo.mp4"
+    "render:editor": "remotion render EditorPromo out/editor-promo.mp4",
+    "render:clips": "remotion render ClipOpening out/clip-opening.mp4 && remotion render ClipGallery out/clip-gallery.mp4 && remotion render ClipEnding out/clip-ending.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.507",
