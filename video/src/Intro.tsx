@@ -58,7 +58,7 @@ const IdleFrames: React.FC<{ width?: number; bob?: number }> = ({ width = 620, b
 // ---------- 场景 1：开场标题（左上） ----------
 const Scene1Opening: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = useSceneFade(390);
+  const fade = useSceneFade(240);
   const titleIn = interpolate(frame, [20, 50], [0, 1], clamp);
   const subIn = interpolate(frame, [55, 85], [0, 1], clamp);
   const scale = interpolate(frame, [20, 55], [0.9, 1], clamp);
@@ -99,7 +99,7 @@ const states = [
 
 const Scene2Gallery: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = useSceneFade(660);
+  const fade = useSceneFade(420);
   const headIn = interpolate(frame, [0, 20], [0, 1], clamp);
   return (
     <AbsoluteFill style={{ opacity: fade, alignItems: 'center', justifyContent: 'center', fontFamily: FONT, flexDirection: 'column' }}>
@@ -108,8 +108,8 @@ const Scene2Gallery: React.FC = () => {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 300px)', gap: '36px 44px' }}>
         {states.map((s, i) => {
-          const appear = interpolate(frame, [i * 14, i * 14 + 16], [0, 1], clamp);
-          const rise = interpolate(frame, [i * 14, i * 14 + 22], [34, 0], clamp);
+          const appear = interpolate(frame, [i * 10, i * 10 + 14], [0, 1], clamp);
+          const rise = interpolate(frame, [i * 10, i * 10 + 18], [34, 0], clamp);
           return (
             <div key={s.code} style={{ opacity: appear, transform: `translateY(${rise}px)`, background: C.card, border: `1px solid ${C.cardBorder}`, borderRadius: 20, padding: '16px 16px 12px', textAlign: 'center' }}>
               {s.seq ? <IdleFrames width={250} /> : <Gif src={staticFile(s.file)} width={250} fit="contain" />}
@@ -126,7 +126,7 @@ const Scene2Gallery: React.FC = () => {
 // ---------- 场景 5：结尾 ----------
 const Scene5Ending: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = useSceneFade(540, 22);
+  const fade = useSceneFade(240, 22);
   const mainIn = interpolate(frame, [20, 48], [0, 1], clamp);
   const linkIn = interpolate(frame, [60, 88], [0, 1], clamp);
   const noteIn = interpolate(frame, [110, 140], [0, 1], clamp);
@@ -156,9 +156,9 @@ export const Intro: React.FC = () => {
   return (
     <AbsoluteFill>
       <Background />
-      <Sequence from={0} durationInFrames={390}><Scene1Opening /></Sequence>
-      <Sequence from={390} durationInFrames={660}><Scene2Gallery /></Sequence>
-      <Sequence from={1050} durationInFrames={540}><Scene5Ending /></Sequence>
+      <Sequence from={0} durationInFrames={240}><Scene1Opening /></Sequence>
+      <Sequence from={240} durationInFrames={420}><Scene2Gallery /></Sequence>
+      <Sequence from={660} durationInFrames={240}><Scene5Ending /></Sequence>
     </AbsoluteFill>
   );
 };
