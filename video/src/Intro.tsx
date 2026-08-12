@@ -123,47 +123,6 @@ const Scene2Gallery: React.FC = () => {
   );
 };
 
-// ---------- 场景 4：安装步骤 ----------
-const steps = [
-  { n: '01', title: '下载仓库', desc: 'github.com/leanyu165-gif/mypet-codex-pet', files: null as string[] | null },
-  { n: '02', title: '复制两个文件', desc: '到 %USERPROFILE%\\.codex\\pets\\mypet\\', files: ['pet.json', 'spritesheet.webp'] },
-  { n: '03', title: '刷新列表', desc: '设置 → Pets → 刷新列表', files: null },
-  { n: '04', title: '选中洁哥', desc: '予愿安洁莉娜q版桌宠', files: null },
-];
-
-const Scene4Install: React.FC = () => {
-  const frame = useCurrentFrame();
-  const fade = useSceneFade(750);
-  const headIn = interpolate(frame, [0, 20], [0, 1], clamp);
-  return (
-    <AbsoluteFill style={{ opacity: fade, alignItems: 'center', justifyContent: 'center', fontFamily: FONT, flexDirection: 'column' }}>
-      <div style={{ opacity: headIn, fontSize: 60, fontWeight: 800, color: C.white, letterSpacing: 4, marginBottom: 60 }}>
-        四步，装好你的洁哥
-      </div>
-      <div style={{ display: 'flex', gap: 40 }}>
-        {steps.map((s, i) => {
-          const appear = interpolate(frame, [18 + i * 22, 36 + i * 22], [0, 1], clamp);
-          const rise = interpolate(frame, [18 + i * 22, 40 + i * 22], [40, 0], clamp);
-          return (
-            <div key={s.n} style={{ opacity: appear, transform: `translateY(${rise}px)`, width: 330, background: C.card, border: `1px solid ${C.cardBorder}`, borderRadius: 22, padding: '28px 26px 26px' }}>
-              <div style={{ fontSize: 40, fontWeight: 800, color: C.pink, letterSpacing: 2 }}>{s.n}</div>
-              <div style={{ marginTop: 10, fontSize: 34, fontWeight: 700, color: C.white }}>{s.title}</div>
-              <div style={{ marginTop: 12, fontSize: 21, color: C.muted, lineHeight: 1.6, wordBreak: 'break-all' }}>{s.desc}</div>
-              {s.files && (
-                <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                  {s.files.map((f) => (
-                    <span key={f} style={{ fontFamily: 'Consolas, monospace', fontSize: 19, color: C.pinkSoft, background: 'rgba(255,158,203,0.12)', border: `1px solid rgba(255,158,203,0.35)`, borderRadius: 8, padding: '6px 12px' }}>{f}</span>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </AbsoluteFill>
-  );
-};
-
 // ---------- 场景 5：结尾 ----------
 const Scene5Ending: React.FC = () => {
   const frame = useCurrentFrame();
@@ -199,8 +158,7 @@ export const Intro: React.FC = () => {
       <Background />
       <Sequence from={0} durationInFrames={390}><Scene1Opening /></Sequence>
       <Sequence from={390} durationInFrames={660}><Scene2Gallery /></Sequence>
-      <Sequence from={1050} durationInFrames={750}><Scene4Install /></Sequence>
-      <Sequence from={1800} durationInFrames={540}><Scene5Ending /></Sequence>
+      <Sequence from={1050} durationInFrames={540}><Scene5Ending /></Sequence>
     </AbsoluteFill>
   );
 };
