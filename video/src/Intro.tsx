@@ -47,16 +47,15 @@ const Background: React.FC = () => {
   );
 };
 
-// ---------- 角色：播放 GIF 并轻微上下浮动 ----------
-const Character: React.FC<{ src: string; width?: number; bob?: number }> = ({ src, width = 660, bob = 10 }) => {
+// ---------- 对齐版待机：按原 4fps 播放对齐后的 PNG 帧序列（无顶部 3px 抽搐） ----------
+const IdleFrames: React.FC<{ width?: number; bob?: number }> = ({ width = 620, bob = 8 }) => {
   const frame = useCurrentFrame();
+  const idx = Math.floor((frame * 1000) / 7500) % 8; // 250ms/帧 → 30fps 下每 7.5 帧换一张
   const y = Math.sin(frame / 22) * bob;
-  return (
-    <Gif src={staticFile(src)} width={width} fit="contain" style={{ transform: `translateY(${y}px)` }} />
-  );
+  return <img src={staticFile(`aligned/idle/${String(idx + 1).padStart(2, '0')}.png`)} width={width} style={{ transform: `translateY(${y}px)` }} />;
 };
 
-// ---------- 场景 1：开场标题 ----------
+// ---------- 场景 1：开场标题（左上） ----------
 const Scene1Opening: React.FC = () => {
   const frame = useCurrentFrame();
   const fade = useSceneFade(390);
@@ -64,16 +63,22 @@ const Scene1Opening: React.FC = () => {
   const subIn = interpolate(frame, [55, 85], [0, 1], clamp);
   const scale = interpolate(frame, [20, 55], [0.9, 1], clamp);
   return (
-    <AbsoluteFill style={{ opacity: fade, alignItems: 'center', justifyContent: 'center', fontFamily: FONT, flexDirection: 'column' }}>
-      <Character src="anims/01-待机.gif" width={620} bob={8} />
-      <div style={{ transform: `scale(${scale})`, opacity: titleIn, marginTop: 4, fontSize: 92, fontWeight: 800, letterSpacing: 6, color: C.white, textShadow: '0 10px 46px rgba(0,0,0,0.5)' }}>
-        予愿安洁莉娜q版桌宠
+    <AbsoluteFill style={{ opacity: fade, fontFamily: FONT }}>
+      <div style={{ position: 'absolute', top: 128, left: 150, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+        <div style={{ transform: `scale(${scale})`, opacity: titleIn, fontSize: 104, fontWeight: 800, letterSpacing: 4, lineHeight: 1.16, color: C.white, textShadow: '0 10px 46px rgba(0,0,0,0.5)' }}>
+          予愿安洁莉娜
+          <br />
+          q版桌宠
+        </div>
+        <div style={{ opacity: subIn, marginTop: 30, fontSize: 40, color: C.pinkSoft, letterSpacing: 5 }}>
+          Codex 桌面桌宠 · 让洁哥陪你工作
+        </div>
+        <div style={{ opacity: subIn, marginTop: 16, fontSize: 26, color: C.muted, letterSpacing: 2 }}>
+          基于 Codex 桌宠 V2 规范 · 8 列 × 11 行动作图集
+        </div>
       </div>
-      <div style={{ opacity: subIn, marginTop: 22, fontSize: 38, color: C.pinkSoft, letterSpacing: 5 }}>
-        Codex 桌面桌宠 · 让洁哥陪你工作
-      </div>
-      <div style={{ opacity: subIn, marginTop: 14, fontSize: 24, color: C.muted, letterSpacing: 2 }}>
-        基于 Codex 桌宠 V2 规范 · 8 列 × 11 行动作图集
+      <div style={{ position: 'absolute', right: 120, bottom: 30 }}>
+        <IdleFrames width={840} bob={8} />
       </div>
     </AbsoluteFill>
   );
@@ -81,7 +86,7 @@ const Scene1Opening: React.FC = () => {
 
 // ---------- 场景 2：九宫格动作巡礼 ----------
 const states = [
-  { file: 'grid/01-待机-idle.gif', name: '待机', code: 'idle' },
+  { seq: true, name: '待机', code: 'idle' },
   { file: 'grid/02-向右移动-running-right.gif', name: '向右移动', code: 'running-right' },
   { file: 'grid/03-向左移动-running-left.gif', name: '向左移动', code: 'running-left' },
   { file: 'grid/04-互动-waving.gif', name: '互动', code: 'waving' },
@@ -99,7 +104,7 @@ const Scene2Gallery: React.FC = () => {
   return (
     <AbsoluteFill style={{ opacity: fade, alignItems: 'center', justifyContent: 'center', fontFamily: FONT, flexDirection: 'column' }}>
       <div style={{ opacity: headIn, fontSize: 60, fontWeight: 800, color: C.white, letterSpacing: 4, marginBottom: 48 }}>
-        九个状态 · 一只有反应的洁哥
+        九个状态 · 根据 Codex 状态反馈
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 300px)', gap: '36px 44px' }}>
         {states.map((s, i) => {
@@ -107,52 +112,12 @@ const Scene2Gallery: React.FC = () => {
           const rise = interpolate(frame, [i * 14, i * 14 + 22], [34, 0], clamp);
           return (
             <div key={s.code} style={{ opacity: appear, transform: `translateY(${rise}px)`, background: C.card, border: `1px solid ${C.cardBorder}`, borderRadius: 20, padding: '16px 16px 12px', textAlign: 'center' }}>
-              <Gif src={staticFile(s.file)} width={250} fit="contain" />
+              {s.seq ? <IdleFrames width={250} /> : <Gif src={staticFile(s.file)} width={250} fit="contain" />}
               <div style={{ marginTop: 8, fontSize: 26, color: C.white, fontWeight: 600 }}>{s.name}</div>
               <div style={{ fontSize: 18, color: C.muted, fontFamily: 'Consolas, monospace' }}>{s.code}</div>
             </div>
           );
         })}
-      </div>
-    </AbsoluteFill>
-  );
-};
-
-// ---------- 场景 3：技术规格 ----------
-const bullets = [
-  'Codex 桌宠 V2 规范 · 8 列 × 11 行',
-  '整图 1536 × 2288 · 单格 192 × 208',
-  '9 种动作状态，引擎按事件自动切换',
-  '互动 / 任务完成 / 失败 / 工作各有专属动画',
-  '源素材来自《明日方舟》官方公开素材',
-];
-
-const Scene3Specs: React.FC = () => {
-  const frame = useCurrentFrame();
-  const fade = useSceneFade(600);
-  const headIn = interpolate(frame, [0, 20], [0, 1], clamp);
-  const zoom = interpolate(frame, [0, 600], [1, 1.08], clamp);
-  return (
-    <AbsoluteFill style={{ opacity: fade, alignItems: 'center', justifyContent: 'center', fontFamily: FONT, flexDirection: 'column' }}>
-      <div style={{ opacity: headIn, fontSize: 60, fontWeight: 800, color: C.white, letterSpacing: 4, marginBottom: 52 }}>
-        技术规格
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 90 }}>
-        <div style={{ width: 700, borderRadius: 24, overflow: 'hidden', border: `1px solid ${C.cardBorder}`, background: '#000', boxShadow: '0 24px 80px rgba(0,0,0,0.5)' }}>
-          <img src={staticFile('atlas.webp')} style={{ width: '100%', transform: `scale(${zoom})`, display: 'block' }} alt="精灵图集" />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
-          {bullets.map((b, i) => {
-            const appear = interpolate(frame, [24 + i * 18, 40 + i * 18], [0, 1], clamp);
-            const x = interpolate(frame, [24 + i * 18, 40 + i * 18], [30, 0], clamp);
-            return (
-              <div key={b} style={{ opacity: appear, transform: `translateX(${x}px)`, display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ width: 14, height: 14, borderRadius: '50%', background: C.pink, boxShadow: `0 0 18px ${C.pink}` }} />
-                <div style={{ fontSize: 30, color: C.white, letterSpacing: 1 }}>{b}</div>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </AbsoluteFill>
   );
@@ -208,7 +173,7 @@ const Scene5Ending: React.FC = () => {
   const noteIn = interpolate(frame, [110, 140], [0, 1], clamp);
   return (
     <AbsoluteFill style={{ opacity: fade, alignItems: 'center', justifyContent: 'center', fontFamily: FONT, flexDirection: 'column' }}>
-      <Character src="anims/01-待机.gif" width={520} bob={8} />
+      <IdleFrames width={500} bob={8} />
       <div style={{ opacity: mainIn, marginTop: 4, fontSize: 74, fontWeight: 800, letterSpacing: 6, color: C.white, textShadow: '0 10px 46px rgba(0,0,0,0.5)' }}>
         让洁哥陪你工作
       </div>
@@ -234,9 +199,8 @@ export const Intro: React.FC = () => {
       <Background />
       <Sequence from={0} durationInFrames={390}><Scene1Opening /></Sequence>
       <Sequence from={390} durationInFrames={660}><Scene2Gallery /></Sequence>
-      <Sequence from={1050} durationInFrames={600}><Scene3Specs /></Sequence>
-      <Sequence from={1650} durationInFrames={750}><Scene4Install /></Sequence>
-      <Sequence from={2400} durationInFrames={540}><Scene5Ending /></Sequence>
+      <Sequence from={1050} durationInFrames={750}><Scene4Install /></Sequence>
+      <Sequence from={1800} durationInFrames={540}><Scene5Ending /></Sequence>
     </AbsoluteFill>
   );
 };
